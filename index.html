@@ -14,12 +14,28 @@
             #map {
                 height: 80vh; /* Sets the height to 80% of the viewport height */
                 width: 150vh; /* Sets the width to 150% of the viewport height */
+                margin-top: 50px; /* moves the map 50 px down */
             }
         </style>
     </head>
     
     <body> <!-- Body section of the HTML document -->
-        <div id="map"></div> <!-- Div element where the map will be rendered -->
+        <!-- Div element where the map will be rendered -->
+        <div id="map"></div>
+
+        <!-- Div element for the radio buttons -->
+        <div style="position: absolute; right: 10px; top: 50px; z-index: 999;">
+            <input type="radio" id="osm" name="layer" value="osm" checked>
+            <label for="osm">OpenStreetMap</label><br>
+            
+            <input type="radio" id="topo" name="layer" value="topo">
+            <label for="topo">OpenTopoMap</label><br>
+
+            <input type="radio" id="bw" name="layer" value="bw">
+            <label for="bw">Black and White</label>
+        </div>
+
+        <!-- Scripts -->
         <!-- Includes the Leaflet JavaScript library from a CDN -->
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         
