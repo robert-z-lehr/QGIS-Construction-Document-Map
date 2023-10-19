@@ -1,0 +1,4 @@
+PyPDF2==1.26.0
+pdf2image==1.16.0
+opencv-python==4.8.0
+// ... other Python packages
