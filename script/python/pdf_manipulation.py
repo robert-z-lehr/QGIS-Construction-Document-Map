@@ -5,7 +5,17 @@ if __name__ == "__main__":
     # Import dependencies
     import cv2
     import numpy as np
+    import PyPDF2
+    from pdf2image import convert_from_path
+    
+    # Declare global constants and variables
 
+    # Declare classes, methods, and functions
+
+    # Main execution block or main logic
+    ## ----------------------------------------------------------
+    # Locate Map Boundary
+    ## ----------------------------------------------------------
     for i, image in enumerate(images):
         # Convert PIL Image to NumPy array
         image_np = np.array(image)
@@ -31,17 +41,9 @@ if __name__ == "__main__":
         # Save as PNG
         cv2.imwrite(f"cropped_page_{i + 1}.png", cropped_map)
 
-
-#     # Import dependencies
-#     import PyPDF2
-#     from pdf2image import convert_from_path
-
-#     # Declare global constants and variables
-
-#     # Declare classes, methods, and functions
-
-#     # Main execution block or main logic
-#     ## Extract PDF pages as images
+      ## ----------------------------------------------------------
+      # Extract PDF pages as images
+      ## ----------------------------------------------------------
 #     images = convert_from_path("your_pdf_file.pdf", first_page=6, last_page=7)
     
 #     ## Read the PDF File
@@ -67,3 +69,32 @@ if __name__ == "__main__":
 
     
 #     # Error handling and File handling
+
+    ## ----------------------------------------------------------
+    # Convert to GeoTIFF using GDAL
+    ## ----------------------------------------------------------
+
+    # from osgeo import gdal, osr
+
+    # # Open the image file
+    # input_image = "map.png"
+    # dataset = gdal.Open(input_image, gdal.GA_ReadOnly)
+
+    # # Create a GeoTIFF file
+    # output_file = "map_geotiff.tiff"
+    # driver = gdal.GetDriverByName('GTiff')
+    # dst_ds = driver.CreateCopy(output_file, dataset, 0)
+
+    # # Define the spatial reference system (WGS84 in this example)
+    # srs = osr.SpatialReference()
+    # srs.ImportFromEPSG(4326)  # WGS84
+    # dst_ds.SetProjection(srs.ExportToWkt())
+
+    # # Define the geotransformation (replace with your own coordinates)
+    # # (top left x, w-e pixel resolution, rotation, top left y, rotation, n-s pixel resolution)
+    # geotransform = [longitude, 1, 0, latitude, 0, -1]
+    # dst_ds.SetGeoTransform(geotransform)
+
+    # # Close files
+    # dataset = None
+    # dst_ds = None
