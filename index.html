@@ -1,11 +1,29 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- Defines the document to be HTML5 -->
 <html>
-<head>
-    <title>My QGIS Map</title>
-    <link rel="stylesheet" href="script/css/styles.css">
-    <script src="script/js/main.js" defer></script>
-</head>
-<body>
-    <div id="map"></div>
-</body>
+    <head> <!-- Head section of the HTML document -->
+        <title>QGIS Multi-Layer Map Template</title> <!-- Sets the title of the webpage -->
+        <meta charset="utf-8" /> <!-- Specifies the character encoding for the HTML document -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes the webpage responsive -->
+        
+        <!-- Includes the leaflet CSS from a CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+        <!-- Internal CSS -->
+        <style> 
+            /* Sets the map's dimensions */
+            #map {
+                height: 80vh; /* Sets the height to 80% of the viewport height */
+                width: 150vh; /* Sets the width to 150% of the viewport height */
+            }
+        </style>
+    </head>
+    
+    <body> <!-- Body section of the HTML document -->
+        <div id="map"></div> <!-- Div element where the map will be rendered -->
+        <!-- Includes the Leaflet JavaScript library from a CDN -->
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        
+        <!-- Includes the local map.js file -->
+        <script src="script/js/map.js"></script>
+    </body>
 </html>
