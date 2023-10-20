@@ -1,4 +1,5 @@
 PyPDF2==1.26.0
 pdf2image==1.16.0
 opencv-python==4.8.0
-// ... other Python packages
+pdfinfo==23.10.0
+GDAL==3.7.2, //released 2023/09/05

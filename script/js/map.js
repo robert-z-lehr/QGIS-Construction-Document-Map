@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", function() {
             attribution: '&copy; <a href="https://www.opentopomap.org/">OpenTopoMap</a>'
         });
 
-        // Define a black and white tile layer and its attribution.
-        var bwLayer = L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
-            attribution: '&copy; Wikimedia'
+        // Assuming your GeoJSON data is in a variable called 'yourGeoJsonData'
+        var tooleLayer = L.geoJSON(yourGeoJsonData, {
+            // Optional: Add styles or onEachFeature function here
         });
 
         // Add the OpenStreetMap layer as the default layer when the map loads.
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var baseLayers = {
             "OpenStreetMap": osmLayer,
             "OpenTopoMap": topoLayer,
-            "Black and White": bwLayer
+            "Toole": tooleLayer
         };
 
         // Add the layer control to the map, and place it on the top-right corner
@@ -45,20 +45,20 @@ document.addEventListener("DOMContentLoaded", function() {
                     case 'osm':
                         // Remove other layers and add the OpenStreetMap layer.
                         map.removeLayer(topoLayer);
-                        map.removeLayer(bwLayer);
+                        map.removeLayer(tooleLayer);
                         map.addLayer(osmLayer);
                         break;
                     case 'topo':
                         // Remove other layers and add the OpenTopoMap layer.
                         map.removeLayer(osmLayer);
-                        map.removeLayer(bwLayer);
+                        map.removeLayer(tooleLayer);
                         map.addLayer(topoLayer);
                         break;
-                    case 'bw':
+                    case 'toole':
                         // Remove other layers and add the black and white layer.
                         map.removeLayer(osmLayer);
                         map.removeLayer(topoLayer);
-                        map.addLayer(bwLayer);
+                        map.addLayer(tooleLayer);
                         break;
                 }
             });

@@ -1,100 +1,94 @@
+# Debugger
+## Commonly used pdb commands:
+## n (next): Continue execution until the next line in the current function is reached.
+## s (step): Execute the current line and stop at the first possible occasion.
+## c (continue): Continue execution until a breakpoint is encountered.
+## q (quit): Exit the debugger and terminate the program.
+## l (list): Display 11 lines around the current line or continue the previous listing.
+## u (up): Move one level up in the stack trace.
+## d (down): Move one level down in the stack trace.
+## p (print): Evaluate and print the expression.
+## pp (pretty-print): Pretty-print the value of the expression.
+## w (where): Print a stack trace, with the most recent frame at the bottom.
+breakpoint()
+
+# ===================
+# Import dependencies
+# ===================
+
+from pdf2image import convert_from_path, exceptions
+import cv2
+import numpy as np
+
+# ======================================
+# Declare global constants and variables
+# ======================================
+
+# =======================================
+# Declare classes, methods, and functions
+# =======================================
+
+# ============================
+# Main Logic / Execution Block
+# ============================
 if __name__ == "__main__":
-    # Start debugger
-    breakpoint()
-    
-    # Import dependencies
-    import cv2
-    import numpy as np
-    import PyPDF2
-    from pdf2image import convert_from_path
-    
-    # Declare global constants and variables
+    try:
+# Convert PDF to image
+        images = convert_from_path('../../source_documents/pdf/construction_document_1.pdf', first_page=1, last_page=1)
+    except exceptions.PdfFileDoesNotExist:
+        print("Error: PDF file not found.")
+        exit(1)
+    except Exception as e:
+        print(f"Error: An unexpected error occurred while reading the PDF: {e}")
+        exit(1)
 
-    # Declare classes, methods, and functions
+    if len(images) == 0:
+        print("Error: No images were extracted from the PDF.")
+        exit(1)
 
-    # Main execution block or main logic
-    ## ----------------------------------------------------------
-    # Locate Map Boundary
-    ## ----------------------------------------------------------
-    for i, image in enumerate(images):
-        # Convert PIL Image to NumPy array
-        image_np = np.array(image)
-        
-        # Convert to grayscale
-        gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
-        
-        # Use Canny edge detection
-        edges = cv2.Canny(gray, 50, 150)
-        
-        # Find contours
-        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        
-        # Sort contours by area and keep the largest one (assuming it's the map)
-        sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
-        
-        # Get bounding box for the largest contour
-        x, y, w, h = cv2.boundingRect(sorted_contours[0])
-        
-        # Crop the image
-        cropped_map = image_np[y:y+h, x:x+w]
-        
-        # Save as PNG
-        cv2.imwrite(f"cropped_page_{i + 1}.png", cropped_map)
+    image = images[0]
 
-      ## ----------------------------------------------------------
-      # Extract PDF pages as images
-      ## ----------------------------------------------------------
-#     images = convert_from_path("your_pdf_file.pdf", first_page=6, last_page=7)
-    
-#     ## Read the PDF File
-#     with open("your_pdf_file.pdf", "rb") as f:
-#         pdf_reader = PyPDF2.PdfFileReader(f)
-#         total_pages = pdf_reader.numPages
-        
-#     ## Extract Specific Pages: If your map is on specific pages, you can create a new PDF containing only those pages.
-#     pdf_writer = PyPDF2.PdfWriter()
-#     for page_num in [5, 6]:  # Assuming maps are on page 6 and 7
-#         page = pdf_reader.getPage(page_num)
-#         pdf_writer.addPage(page)
-    
-#     with open("cropped_pdf.pdf", "wb") as out_pdf:
-#         pdf_writer.write(out_pdf)
+# Convert PIL Image to NumPy array
+    image_np = np.array(image)
 
-#     ## Convert PDF Pages to Images
-#     from pdf2image import convert_from_path
+# Convert to grayscale
+    gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
 
-#     images = convert_from_path("cropped_pdf.pdf")
-#     for i, image in enumerate(images):
-#         image.save(f"page_{i + 1}.png", "PNG")
+# Use Canny edge detection
+    edges = cv2.Canny(gray, 50, 150)
 
-    
-#     # Error handling and File handling
+# Find contours
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    ## ----------------------------------------------------------
-    # Convert to GeoTIFF using GDAL
-    ## ----------------------------------------------------------
+    if len(contours) == 0:
+        print("Error: No contours were found.")
+        exit(1)
 
-    # from osgeo import gdal, osr
+# Sort contours by area and keep the largest one (assuming it's the map)
+    sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
 
-    # # Open the image file
-    # input_image = "map.png"
-    # dataset = gdal.Open(input_image, gdal.GA_ReadOnly)
+    if len(sorted_contours) == 0:
+        print("Error: No sorted contours are available.")
+        exit(1)
 
-    # # Create a GeoTIFF file
-    # output_file = "map_geotiff.tiff"
-    # driver = gdal.GetDriverByName('GTiff')
-    # dst_ds = driver.CreateCopy(output_file, dataset, 0)
+# Get bounding box for the largest contour
+    x, y, w, h = cv2.boundingRect(sorted_contours[0])
 
-    # # Define the spatial reference system (WGS84 in this example)
-    # srs = osr.SpatialReference()
-    # srs.ImportFromEPSG(4326)  # WGS84
-    # dst_ds.SetProjection(srs.ExportToWkt())
+# Crop the image
+    cropped_map = image_np[y:y + h, x:x + w]
 
-    # # Define the geotransformation (replace with your own coordinates)
-    # # (top left x, w-e pixel resolution, rotation, top left y, rotation, n-s pixel resolution)
-    # geotransform = [longitude, 1, 0, latitude, 0, -1]
-    # dst_ds.SetGeoTransform(geotransform)
+    try:
+# Save as PNG
+        cv2.imwrite("cropped_map.png", cv2.cvtColor(cropped_map, cv2.COLOR_RGB2BGR))
+    except Exception as e:
+        print(f"Error: An error occurred while saving the PNG: {e}")
+        exit(1)
 
-    # # Close files
-    # dataset = None
-    # dst_ds = None
+    print("Cropped map has been successfully saved as 'cropped_map.png'.")
+# ==============
+# Error Handling
+# ==============
+
+# =============
+# File Handling
+# =============
